@@ -25,7 +25,7 @@ class CreateUserCarRequest(BaseModel):
 
 
 class GetUserCarRequest(BaseModel):
-    trimId: int
+    trim_id: int
     name: str
 
     class Config:

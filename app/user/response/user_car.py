@@ -31,7 +31,7 @@ class GetTireInfoResponse(BaseModel):
 
 class GetUserCarResponse(BaseModel):
     id: str
-    trimId: int
+    trim_id: int
     car_tire: Optional[GetTireInfoResponse]
 
     class Config:

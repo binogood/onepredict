@@ -31,11 +31,7 @@ class UserCarService:
         self.car_tire_repo = car_tire_repo
 
     @Transaction(propagation=Propagation.REQUIRED)
-    async def create_user_car(
-                    self,
-                    user_info: Request,
-                    user_car_info: list,
-                ) -> Union[UserCar, NoReturn]:
+    async def create_user_car(self, user_info: Request, user_car_info: list,) -> Union[UserCar, NoReturn]:
         user_id = user_info.user.id
         if len(user_car_info) > 5:
             raise ManyRequestsException
@@ -43,11 +39,9 @@ class UserCarService:
         for value in user_car_info:
             value = value.dict()
             car_id = await self._check_value(value, user_id)
-
             user_car = UserCar().create(car_id=car_id, user_id=user_id)
             user_car = await self.user_car_repo.save(user_car=user_car)
             user_car_list.append(user_car)
-
         return user_car_list
 
     @Transaction(propagation=Propagation.REQUIRED)
@@ -57,7 +51,7 @@ class UserCarService:
     async def _user_car_info(self, trim_id: int, name: str) -> dict:
         user = await self.user_repo.get_by_name(name=name)
         car = await self.car_repo.get_by_car_trim(trim_id=trim_id)
-        car_tire = await self.car_tire_repo.get_by_car_tire_info(car_id=car.car_id)
+        car_tire = await self.car_tire_repo.get_by_car_tire_info(trim_id=car.trim_id)
         car_tire_info = {'id': user.name, "trim_id": car.trim_id, "car_tire": car_tire}
         return car_tire_info
 

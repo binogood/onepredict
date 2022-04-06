@@ -1,8 +1,11 @@
+import os
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from core.di import init_di
+from core.config import config, get_config
+from core.di import init_di, fake_init_di
 from core.exceptions.base import CustomException
 from core.fastapi.middlewares.sqlalchemy import SQLAlchemyMiddleware
 from core.fastapi.middlewares.authentication import (
@@ -67,7 +70,7 @@ def create_app() -> FastAPI:
     init_cors(app=app)
     init_listeners(app=app)
     init_middleware(app=app)
-    init_di()
+    fake_init_di() if config.ENV == "development" else init_di()
     return app
 
 

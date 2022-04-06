@@ -24,15 +24,14 @@ class CarTireService:
     @Transaction(propagation=Propagation.REQUIRED)
     async def create_car_tire(self, car_id: int, tire_id: int):
         await self._check_value(car_id=car_id, tire_id=tire_id)
-
         car_tire = CarTire().create(car_id=car_id, tire_id=tire_id)
         car_tire = await self.car_tire_repo.save(car_tire=car_tire)
         return car_tire
 
     async def _check_value(self, car_id: int, tire_id: int):
-        if await self.tire_repo.get_by_tire_id(tire_id=tire_id):
+        if not await self.tire_repo.get_by_tire_id(tire_id=tire_id):
             raise TireNotFoundException
-        if await self.car_repo.get_by_car_id(car_id=car_id):
+        if not await self.car_repo.get_by_car_id(car_id=car_id):
             raise CarNotFoundException
         if await self.car_tire_repo.get_by_car_tire(car_id=car_id, tire_id=tire_id):
             raise DuplicateCarTireException
